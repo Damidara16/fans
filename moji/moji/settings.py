@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'p32o79th6p2=f88w-ev4var@*u__7f!cp$r#7*@1oh=m@8+e02'
-
+#SECRET_KEY = 'p32o79th6p2=f88w-ev4var@*u__7f!cp$r#7*@1oh=m@8+e02'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['fans2000.herokuapp.com']
 
 #EMAIL
 #if DEBUG == True:
@@ -168,3 +168,8 @@ BLOCKED_URLS = (
 )
 
 STRIPE_KEY = "sk_test_jTTjKLvfrEeL6cXjKqoF1KdB"
+
+import dj_database_url
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
+DATABASES['default']['CONN_MAX_AGE'] = 500
