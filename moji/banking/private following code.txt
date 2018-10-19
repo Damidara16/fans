@@ -1,0 +1,76 @@
+def listRequests(request):
+    user = request.user
+    return render(request, 'account/reqList.html', {'user':user})
+
+def detailRequests(request, name):
+    try:
+        user = User.objects.get(username=name)
+        req = request.user.requested.get(userTo=user)
+        #req = AccountRequest.objects.filter(userFrom=request.user).get(userTo=name)
+    except AccountRequest.DoesNotExist:
+        raise Http404("Cant find that request")
+    return render(request, 'account/reqDetail.html', {'req':req})
+
+def deleteRequests(request, name):
+    try:
+        user = User.objects.get(username=name)
+        req = request.user.requested.get(userTo=user)
+        #req = AccountRequest.objects.filter(userFrom=request.user).get(userTo=name)
+        req.delete()
+    except AccountRequest.DoesNotExist:
+        raise Http404("Cant find that request")
+    return redirect(reverse('account:ProfileView', kwargs={'name':request.user.username}))
+
+def editRequests(request, name):
+    try:
+        user = User.objects.get(username=name)
+        req = request.user.requested.get(userTo=user)
+        #req = AccountRequest.objects.filter(userFrom=request.user).get(userTo=name)
+        req.accept = True
+        req.save()
+    except AccountRequest.DoesNotExist:
+        raise Http404("Cant find that request")
+    return redirect(reverse('account:ProfileView', kwargs={'name':request.user.username}))
+
+def makeRequests(request, name):
+    #need to add where one model can be made, probably use the sent field
+    try:
+        user = User.objects.get(username=name)
+    except AccountRequest.DoesNotExist:
+        raise Http404("Cant find that request")
+    accept = AccountRequest()
+    accept.userTo = user
+    accept.userFrom = request.user
+    accept.save()
+    return redirect(reverse('account:ProfileView', kwargs={'name':request.user.username}))
+
+def unfollowUser(request, name):
+    try:
+        user = User.objects.get(username=name)
+        request.user.profile.following.remove(user)
+        #req = AccountRequest.objects.filter(userFrom=request.user).get(userTo=name)
+    except AccountRequest.DoesNotExist:
+        raise Http404("Cant find that user")
+    return redirect(reverse('home:home'))
+
+model
+class AccountRequest(models.Model):
+    #user.requested.all() -> gives all the Requested invites and vise-versa
+    userTo = models.ForeignKey(User, related_name='requested')
+    userFrom = models.ForeignKey(User, related_name='requester')
+    accept = models.BooleanField(default=False)
+    sent = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.userTo.username
+
+    def get_absolute_url(self):
+        return reverse('account:detailAcceptance', kwargs={'name':self.userTo.username})
+
+    def save(self, *args, **kwargs):
+        if self.accept == True: #or self.userTo in self.userFrom.profile.following: #and user saving it is the userTo:
+            self.userFrom.profile.following.add(self.userTo)
+            self.delete()
+            return None
+        else:
+            super(AccountRequest, self).save(*args, **kwargs)

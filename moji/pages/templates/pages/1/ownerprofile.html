@@ -1,0 +1,77 @@
+<h1>FANMOJI</h1>
+<a href="{% url 'home:home' %}">Home</a>
+<a href="{% url 'account:update' %}">edit profile</a>
+<a href="{% url 'notif:editNotif' %}">manage notifications</a>
+<h1>Profile</h1>
+<p>Full name: {{ user.first_name }}  {{ user.last_name }}</p>
+
+{% if user.stripecustomer %}
+<a href="{% url 'banking:precard' %}">replace billing info</a>
+{% else %}
+<a href="{% url 'banking:precard' %}">add billing info</a>
+{% endif %}
+
+{% if user.celeb == True %}
+<b>user is a influencer</b>
+<a href="{% url 'product:stripeview' %}"></a>
+{% else %}
+<a href="">become a celeb</a>
+{% endif %}
+
+{% if user.profile.bio != None %}
+<p>Bio: {{ user.profile.bio }}</p>
+{% else %}
+<p>No bio</p>
+{% endif %}
+
+<p><a href="{{ user.link1 }}">{{ user.link1 }}</a></p>
+<p><a href="{{ user.link2 }}">{{ user.link2 }}</a></p>
+
+{% if user.location != None %}
+<p>Location: {{ user.location }}</p>
+{% else %}
+{% endif %}
+
+{% if user.profile.pic %}
+<img src="{{ user.profile.pic.url }}" width="240">
+{% endif %}
+
+
+<br>
+<p>{{user.username}}'s content</p>
+  <ul>
+      {% for iii in user.content_set.all %}
+        <li><a href="{{ iii.get_absolute_url }}">{{ iii.typeContent }}</a></li>
+      {% if iii.preview == False %}
+        <li><a href="{% url 'account:PreviewProcess' uuid=iii.uuid %}">add to previews</a></li>
+      {% else %}
+        <li><a href="{% url 'account:PreviewProcess' uuid=iii.uuid %}">remove to previews</a></li>
+      {% endif %}
+      {% empty %}
+        <li>No Contents</li>
+      {% endfor %}
+  </ul>
+
+
+{% if user.requested.all %}
+<a href="{% url 'account:listAcceptance' %}">view requests</a>
+{% endif %}
+
+<p>Following</p>
+  <ul>
+      {% for i in user.profile.following.all %}
+      <li><a href="{{ i.get_absolute_url }}">{{ i.username }}</a></li>
+      {% empty %}
+      <li>follows no one</li>
+      {% endfor %}
+  </ul>
+<br>
+
+<p>Followers</p>
+  <ul>
+      {% for ii in user.followed_by.all %}
+      <li><a href="{{ ii.get_absolute_url }}">{{ ii.user.username }}</a></li>
+      {% empty %}
+      <li>No one follows this person</li>
+      {% endfor %}
+  </ul>

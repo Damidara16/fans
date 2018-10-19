@@ -1,0 +1,76 @@
+<h1>FANMOJI</h1>
+<a href="{% url 'home:home' %}">Home</a>
+
+<h1>Profile</h1>
+<p>Full name: {{ user.first_name }}  {{ user.last_name }}</p>
+
+{% if user.celeb == True %}
+<b>user is a influencer</b>
+<a href="{% url 'product:SendTip' %}">send a gift</a>
+{% endif %}
+
+{% if user.profile.bio != None %}
+<p>Bio: {{ user.profile.bio }}</p>
+{% else %}
+<p>No bio</p>
+{% endif %}
+
+{% if user is in request.user.following  and user.celeb == False %}
+<a href='{% url 'account:Unfollow' name=user.username %}'>Unfollow</a>
+{% elif user is in request.user.following  and user.celeb == True %}
+<a href='{% url 'product:cancelMem' name=user.uuid %}'>Cancel Subscription</a>
+{% endif %}
+
+
+<p><a href="{{ user.link1 }}">{{ user.link1 }}</a></p>
+<p><a href="{{ user.link2 }}">{{ user.link2 }}</a></p>
+
+{% if user.location != None %}
+<p>Location: {{ user.location }}</p>
+{% else %}
+{% endif %}
+
+{% if user.profile.pic %}
+<img src="{{ user.profile.pic.url }}" width="240">
+{% endif %}
+
+
+<br>
+<p>{{user.username}}'s content</p>
+  <ul>
+      {% for iii in user.content_set.all %}
+      <li><a href="{{ iii.get_absolute_url }}">{{ iii.caption }}</a></li>
+      {% empty %}
+      <li>No Contents</li>
+      {% endfor %}
+  </ul>
+
+<p>follow request</p>
+  <ul>
+      {% for iiii in user.requested.all %}
+      <li><a href="{{ iiii.get_absolute_url }}">{{ iiii.userFrom.username }}</a></li>
+      {% empty %}
+      <li>No Contents</li>
+      {% endfor %}
+  </ul>
+
+<p>Following</p>
+  <ul>
+      {% for i in user.profile.following.all %}
+      <li><a href="{{ i.get_absolute_url }}">{{ i.username }}</a></li>
+      {% empty %}
+      <li>follows no one</li>
+      {% endfor %}
+  </ul>
+<br>
+
+<p>Followers</p>
+  <ul>
+      {% for ii in user.followed_by.all %}
+      <li><a href="{{ ii.get_absolute_url }}">{{ ii.user.username }}</a></li>
+      {% empty %}
+      <li>No one follows this person</li>
+      {% endfor %}
+  </ul>
+
+  <a href="{% url 'account:blockUser' uuid=user.uuid %}">block user</a>

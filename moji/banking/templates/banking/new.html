@@ -1,0 +1,182 @@
+<!doctype html>
+sucess
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% load staticfiles %}
+
+    <!-- Bootstrap CSS -->
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+
+    .footer {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f5f5f5;
+        height: 50px;
+        line-height: 50px;
+        color: black;
+        text-align: center;
+    }
+
+    .dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+  .dropdown-menu a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown-menu a:hover {background-color: #ddd}
+
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+
+  .dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+  }
+
+
+
+    </style>
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    {% if user.is_authenticated %}
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light py-3 ">
+      <a class="navbar-brand font-weight-bold font-italic " href="#">Fanmojis</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link font-weight-bold" href="#">Discover</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle  font-weight-bold" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Create
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item  font-weight-bold" href="#">Image</a>
+              <a class="dropdown-item  font-weight-bold" href="#">Video</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item  font-weight-bold" href="#">Say Something</a>
+            </div>
+          </li>
+
+        </ul>
+
+        <div class="dropdown show">
+        <a class="btn btn-primary dropdown-toggle mx-2 px-4 " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            John Adams <span class="badge badge-light ml-2">234</span>
+            <span class="sr-only">followers</span>
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="#">Settings</a>
+          <a class="dropdown-item" href="#">Billing</a>
+          <a class="dropdown-item" href="#">Logout</a>
+        </div>
+      </div>
+
+
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+    {% else %}
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light py-3 ">
+      <a class="navbar-brand font-weight-bold font-italic " href="#">Fanmojis</a>
+      
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link font-weight-bold" href="#">How We Work</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link font-weight-bold" href="#">About Us</a>
+          </li>
+        </ul>
+
+
+        <a class="nav-link font-weight-bold" href="#">Discover<i class="fab fa-wpexplorer ml-2"></i></a>
+
+      </div>
+    </nav>
+    {% endif %}
+
+
+<br>
+
+
+<div class='container mt-4 pt-4'>
+  {% block boody %}
+
+  {% endblock %}
+</div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+
+  <footer class="footer mt-3">
+
+  <div class='row justify-content-between'>
+    <div class="col-sm-3 col-md-auto col-lg-3">
+      <a href="#" class="badge badge-pill badge-primary">Contact</a>
+      <a href="#" class="badge badge-pill badge-primary">Twitter</a>
+      <a href="#" class="badge badge-pill badge-primary">Instagram</a>
+      <a href="#" class="badge badge-pill badge-primary">Terms</a>
+
+    </div>
+
+    <div class="col-md-auto  col-lg-3">
+      <span class="text-muted font-weight-bold">© Hapi Cake Labs 2018-Present</span>
+    </div>
+
+
+  </div>
+  </footer>
+
+  </body>
+
+
+</html>

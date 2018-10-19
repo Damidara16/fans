@@ -1,0 +1,26 @@
+{% extend 'account/base.html' %}
+
+{% block body %}
+<ul>
+  <li><a href="{% url 'home:genre' genre='sports' %}">Logout</a></li>
+  <li><a href="{% url 'home:genre' genre='finance' %}">Logout</a></li>
+  <li><a href="{% url 'home:genre' genre='art' %}">Logout</a></li>
+  <li><a href="{% url 'home:genre' genre='games' %}">Logout</a></li>
+  <li><a href="{% url 'home:genre' genre='tech' %}">Logout</a></li>
+  <li><a href="{% url 'home:genre' genre='education' %}">Logout</a></li>
+</ul>
+<form method='GET' action="{% url 'home:search' %}" class="navbar-form navbar-right" role="search" >
+  <div class="form-group input-group">
+    <input type="text" value='{{request.GET.q}}' class="form-control" name='q' placeholder="Search.."/>
+    <span class="input-group-btn">
+      <button class="btn btn-default" type="submit" value='Search'>
+        <span class="glyphicon glyphicon-search"></span>
+      </button>
+    </span>
+  </div>
+</form>
+<p>{{page}}</p>
+{% for i in users %}
+<p>{{i.username}}</p>
+{% endfor %}
+{% endblock %}

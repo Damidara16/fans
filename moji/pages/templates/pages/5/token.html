@@ -1,0 +1,17 @@
+<h1>FANMOJI</h1>
+<a href="{% url 'home:home' %}">Home</a>
+
+
+<form action="{% url 'banking:addCard' %}" method="POST">{% csrf_token %}
+  <script
+    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    data-key="pk_test_rtXYk6IQSRgZJdYQNBTTkfci"
+    data-name="Stripe.com"
+    data-description="Widget"
+    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+    data-locale="auto"
+    data-zip-code="true"
+    data-shipping-address='true'
+    data-billing-address='true'>
+  </script>
+</form>

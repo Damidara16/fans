@@ -1,0 +1,9 @@
+<h1>FANMOJI</h1>
+<a href="{% url 'home:home' %}">Home</a>
+<h3>{{celeb.user.username}}</h3>
+<h3>{{celeb.user.plan.description}}</h3>
+<h3>{{celeb.user.plan.price}}</h3>
+
+pay button
+return button
+if user does not have a card on file dont show them pay button, but a link to add card

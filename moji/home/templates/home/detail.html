@@ -1,0 +1,37 @@
+{% extends 'account/base.html' %}
+{% block body %}
+<div class='container'>
+
+<h2>{{content.user}}<h2>
+<h2>{{content.date}}<h2>
+<h2>{{content.typeContent}}<h2>
+{% if content.typeContent == 'Post' %}
+<img src="{{ content.file.url }}"><img>
+{% if content.file %}
+<img src="{{ content.file.url }}"><img>
+{% endif %}
+{% elif content.typeContent == 'Video' %}
+<video width="480" height="360" controls poster='{{content.thumbnail.url}}'>
+<source src='{{ content.file.url }}' type='video/mp4'>
+</video>
+{% endif %}
+
+
+<br>
+<a href='{% url 'content:CreateComment' pk=content.id %}'>create comment</a>
+
+{% for i in content.comment_set.all %}
+<p>{{i.user}}</p>
+<p>{{i.comment}}</p>
+<br>
+{% empty %}
+<p>no comments</p>
+{% endfor %}
+
+{% if content.user == request.user %}
+<a href='{% url 'content:DeleteContent' id=content.id %}'></a>
+{%else%}
+{%endif%}
+</div>
+
+{% endblock %}

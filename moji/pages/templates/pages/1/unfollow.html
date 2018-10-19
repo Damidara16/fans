@@ -1,0 +1,10 @@
+<h1>FANMOJI</h1>
+<a href="{% url 'home:home' %}">Home</a>
+
+{% if user.celeb == true %}
+<h2>are you sure you want to cancel your subscription, the remainder of your subscription will be active till the end of term</h2><a href="{% url %}">yes</a>
+{% else %}
+<h2>are you sure you want to Unfollow</h2><a href="{% url %}">yes</a>
+{% endif %}
+
+<a href="{% url %}">no</a>

@@ -1,0 +1,12 @@
+<h1>FANMOJI</h1>
+<a href="{% url 'home:home' %}">Home</a>
+
+{% if queryset_list == None %}
+<p>No results</p>
+{% else %}
+{% for i in queryset_list %}
+<ul>
+<li><a href="{{i.get_absolute_url}}">{{i.user.username}}</a></li>
+</ul>
+{% endfor %}
+{% endif %}

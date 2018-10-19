@@ -1,0 +1,7 @@
+<h1>FANMOJI</h1>
+<a href="{% url 'home:home' %}">Home</a>
+
+<h3>{{page}}</h3>
+{% for i in users %}
+<a href='{{i.profile.getabsoluteurl}}'>{{i.username}}</p>
+{% endfor %}

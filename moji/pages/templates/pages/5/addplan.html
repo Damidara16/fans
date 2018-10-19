@@ -1,0 +1,7 @@
+<h1>FANMOJI</h1>
+<a href="{% url 'home:home' %}">Home</a>
+<h3>create a plan</h3>
+<form action="" method="post">{% csrf_token %}
+     {{ form.as_p }}
+     <input type="submit" value="Save" />
+</form>

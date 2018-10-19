@@ -1,0 +1,34 @@
+<h1>FANMOJI</h1>
+<a href="{% url 'home:home' %}">Home</a>
+
+<h1>Profile</h1>
+<p>Full name: {{ user.first_name }}  {{ user.last_name }}</p>
+<p> Private </p>
+{% if user.celeb == True %}
+<b>user is a influencer</b>
+{% endif %}
+
+{% if user.profile.bio != None %}
+<p>Bio: {{ user.profile.bio }}</p>
+{% else %}
+<p>No bio</p>
+{% endif %}
+
+{% if user.celeb == True %}
+<a href="{% url 'product:tempSub' uuid=user.profile.uuid %}">Subscribe to {{user.username}}</a>
+{% else %}
+<a href="{% url 'account:makeAcceptance' name=user.username %}">request to follow</a>
+{% endif %}
+
+
+<p><a href="{{ user.link1 }}">{{ user.link1 }}</a></p>
+<p><a href="{{ user.link2 }}">{{ user.link2 }}</a></p>
+
+{% if user.location != None %}
+<p>Location: {{ user.location }}</p>
+{% else %}
+{% endif %}
+
+{% if user.profile.pic %}
+<img src="{{ user.profile.pic.url }}" width="240">
+{% endif %}

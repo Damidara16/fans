@@ -1,0 +1,8 @@
+<h1>FANMOJI</h1>
+<a href="{% url 'home:home' %}">Home</a>
+
+<h3>{{celeb.price}}</h3>
+<h3>{{celeb.description}}</h3>
+
+
+<a href="{% url 'product:addSub' uuid=user.profile.uuid %}">confirm subscription</a>
