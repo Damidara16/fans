@@ -72,6 +72,9 @@ def aboutUs(request):
 def Hww(request):
     return render(request, 'pages/2/hww.html')
 
+def Join(request):
+    return render(request, 'pages/2/join.html')
+
 class emailReport(FormView):
     template_name = 'home/contact.html'
     form_class = Reporter

@@ -15,10 +15,10 @@
 <p>No bio</p>
 {% endif %}
 
-{% if user is in request.user.following  and user.celeb == False %}
+{% if user in request.user.following and user.celeb == False %}
 <a href='{% url 'account:Unfollow' name=user.username %}'>Unfollow</a>
-{% elif user is in request.user.following  and user.celeb == True %}
-<a href='{% url 'product:cancelMem' name=user.uuid %}'>Cancel Subscription</a>
+{% elif user in request.user.following and user.celeb == True %}
+<a href='{% url 'product:cancelSub' name=user.uuid %}'>Cancel Subscription</a>
 {% endif %}
 
 
@@ -73,4 +73,4 @@
       {% endfor %}
   </ul>
 
-  <a href="{% url 'account:blockUser' uuid=user.uuid %}">block user</a>
+<a href="{% url 'account:blockUser' uuid=user.profile.uuid %}">block user</a>

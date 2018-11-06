@@ -26,7 +26,7 @@ urlpatterns = [
     url(r'^product/', include('product.urls')),
     url(r'^banking/', include('banking.urls')),
     url(r'^notification/', include('notif.urls')),
-
+    url(r'', include('django.contrib.auth.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

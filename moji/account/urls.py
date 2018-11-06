@@ -1,6 +1,7 @@
 from django.conf.urls import url
-from django.contrib.auth.views import login, logout, password_reset, password_reset_done, password_reset_confirm, password_reset_complete
+from django.contrib.auth.views import login, logout, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView 
 from . import views
+from django.contrib.auth import views as auth_views
 
 app_name = 'account'
 
@@ -18,16 +19,15 @@ urlpatterns = [
     url(r'^delete/$', views.deleteProfile, name='DeleteProfile'),
     url(r'^profile-edit/$', views.updateProfile, name='update'),
     url(r'^change-password/$', views.change_password, name='change_password'),
-    url(r'^reset-password/$', password_reset,  {'post_reset_redirect': 'account:password_reset_done'}, name='reset_password'),
-    url(r'^reset-password/done/$', password_reset_done, name='password_reset_done'),
-    #url(r'^reset-password/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', password_reset_confirm, {'post_reset_redirect': 'account:password_reset_complete'}, name='password_reset_confirm'),
-    #url(r'^reset-password/complete/$', password_reset_complete, name='password_reset_complete'),
-    #url(r'^requested/(?P<name>\w+)/$', views.makeRequest.as_view(), name='requested')
+    url(r'^reset-password/$', PasswordResetView.as_view(), name='password_reset'),
+    url(r'^reset-password/done/$', PasswordResetDoneView.as_view(), name='password_reset_done'),
+    url(r'^reset-password/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    url(r'^reset-password/complete/$', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     url(r'^blocked/(?P<uuid>[\w]{8}(-[\w]{4}){3}-[\w]{12})/$', views.blockUser, name='blockUser'),
     url(r'unblocked/(?P<uuid>[\w]{8}(-[\w]{4}){3}-[\w]{12})/$', views.unblockUser, name='unblockUser'),
     url(r'preview/process/(?P<uuid>[\w]{8}(-[\w]{4}){3}-[\w]{12})/$', views.previewRemoveAdd, name='PreviewProcess'),
     #url(r'preview/remove/(?P<uuid>[\w]{8}(-[\w]{4}){3}-[\w]{12})/$', views.PreviewRemove, name='removePreview'),
 
 
-#password reset
+#password reset  {'post_reset_redirect': 'account:password_reset_complete'}  {'post_reset_redirect': 'account:password_reset_done'},
 ]

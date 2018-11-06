@@ -44,7 +44,9 @@ def ViewProfile(request, name=None):
         user = User.objects.get(username=name)
     except User.DoesNotExist:
         raise Http404("User does not exist")
-    if name == request.user.username:
+    if request.user.is_authenticated() == False:
+        return render(request, "pages/1/privateprofile.html", {"user":user, 'unauthed':True})
+    elif name == request.user.username:
         return render(request, "pages/1/ownerprofile.html", {"user":user})
     elif user.profile.private and user not in request.user.profile.following.all():
         return render(request, "pages/1/privateprofile.html", {"user":user})

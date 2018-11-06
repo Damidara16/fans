@@ -81,6 +81,7 @@ class Profile(models.Model):
     celeb = models.BooleanField(default=False)
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tier = models.PositiveIntegerField(default=1)
+    content_requires_18 = models.BooleanField(default=False)
     #genre = models.CharField(max_length=25, choices=Genres)
     percentage = models.PositiveIntegerField(default=25)
     '''

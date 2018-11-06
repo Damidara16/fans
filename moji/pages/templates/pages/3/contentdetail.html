@@ -1,8 +1,11 @@
 <h1>FANMOJI</h1>
 <a href="{% url 'home:home' %}">Home</a>
+
 <h2>{{content.user}}<h2>
 <h2>{{content.date}}<h2>
 <h2>{{content.typeContent}}<h2>
+<h2>{{content.views}}<h2>
+
 {% if content.typeContent == 'Post' %}
 <img src="{{ content.file.url }}"><img>
 {% if content.file %}
@@ -19,11 +22,33 @@
 <a href='{% url 'content:CreateComment' uuid=content.uuid %}'>create comment</a>
 
 {% for i in content.comment_set.all %}
-<p>{{i.user}}</p>
-<p>{{i.comment}}</p>
-<br>
+  {% if i.user == user %}
+    <a href="{% url 'content:DeleteComment' uuid=i.uuid %}">delete comment</a>
+    {% else %}
+    <p>{{i.user}}</p>
+    <p>{{i.comment}}</p>
+      {% for x in i.commentLike_set.all %}
+      {% if x.user == user %}
+      <a href='{% url 'content:Comment_unLike' uuid=x.uuid %}'>unlike</a>
+      {% else %}
+      <a href='{% url 'content:Comment_createLike' uuid=content.uuid %}'>like</a>
+      {% endif %}
+      {% empty %}
+      <a href='{% url 'content:Comment_createLike' uuid=content.uuid %}'>like</a>
+      {% endfor %}
+    <br>
+    {% empty %}
+  <p>no comments</p>
+{% endfor %}
+
+{% for x in content.like_set.all %}
+  {% if x.user == user %}
+    <a href='{% url 'content:unLike' uuid=x.uuid %}'>unlike</a>
+  {% else %}
+    <a href='{% url 'content:createLike' uuid=content.uuid %}'>like</a>
+  {% endif %}
 {% empty %}
-<p>no comments</p>
+<a href='{% url 'content:createLike' uuid=content.uuid %}'>like</a>
 {% endfor %}
 
 {% if content.user == user %}

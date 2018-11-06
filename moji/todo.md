@@ -1,18 +1,21 @@
-middleware tips
-keep user in following until subscription ends, user can view content but cant like, comment, etc and plan is cancelled at the end of term. user can only view content by going to the profile of the user
-
-
-use middleware check if a user has a confirmed card
-
-buy subscriptions, cancel subscription, sendtip,
-
-set up emails stripe, etc in settings
-
-need webhooks to remove user from following
-
 updates to push after online
-connect redirect
-forgot password
-middleware
-webhooks
-report
+
+middleware:
+1. when blocked but still in following, user can view content but cant like or comment
+
+webhooks:
+1. to remove user from following
+2. keep user in following until subscription ends
+
+view edits:
+1. add a if a user has a confirmed card to payment views
+
+notes:
+1. set up emails stripe, etc in settings
+
+
+bundle
+celeb creates a plan and sends a requests to other user to create bundle model
+model gets both plans and creates a sperate billing cycles with two customer models
+coupons can not be used on bundle models
+when the user wants to end, the view will go to the bundle model and end both plans

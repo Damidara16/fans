@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Tip, PointsWallet, Points, Plan
+from .models import Tip, PointsWallet, Points, Plan, Coupons
 from banking.models import TransactionHistory
 from django.contrib.auth.models import User
 from .forms import SetPoint
@@ -38,12 +38,21 @@ def tempSub(request, uuid):
     celeb = Profile.objects.get(uuid=uuid)
     return render(request, 'pages/5/tempsub.html', {'celeb':celeb.user.plan_set.all().last()})
 
-def addSub(request, uuid):
+def addBundleSub(request, uuid, coupon=None):
+    pass
+
+def cancelBundleSub(request, uuid, coupon=None):
+    pass
+    
+def addSub(request, uuid, coupon=None):
     celeb = Profile.objects.get(uuid=uuid)
+    if coupon != None:
+        coupon = celeb.coupons_set.get(name=coupon)
     a = stripe.Subscription.create(
     customer = request.user.stripe_customer.stripe_id,
     # -1 for the latest one
     plan = celeb.plan_set.filter().last(),
+    coupon = coupon.name, #test to see if None works
     application_fee_percent=celeb.profile.percentage,
     stripe_account = celeb.stripe_account.stripe_id
     )
@@ -137,3 +146,20 @@ def SetPoints(request):
     else:
         form = SetPoint(instance=request.user.points)
         return render(request, 'account/update.html', {'form':form})
+
+class CreateCoupon(CreateView):
+    model = Coupons
+    fields = ['name', 'percent_off', 'max_redemptions']
+    template_name = 'pages/3/createpost.html'
+
+def DeleteCoupon(request, name):
+    try:
+        coupon = Coupons.objects.get(name=name)
+        stripe.api_key = settings.STRIPE_KEY
+        cel = User.objects.get(user=request.user)
+        account = stripe.Account.retrieve(cel.ConnectStripeAccount.stripe_id)
+        coupon = stripe.Token.retrieve(coupon.name, stripe_account= account.id)
+        coupon.delete()
+    except:
+        return redirect(reverse('home:home'))
+    return redirect(reverse('home:home'))

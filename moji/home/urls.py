@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^discover/(?P<genre>\w+)/$', views.discoverGenre, name='genre'),
     url(r'^about/$', views.aboutUs, name='about'),
     url(r'^how-we-work/$', views.Hww, name='hww'),
+    url(r'^join/$', views.Join, name='join'),
 
 ]

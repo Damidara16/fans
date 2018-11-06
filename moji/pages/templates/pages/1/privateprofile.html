@@ -17,7 +17,10 @@
 {% if user.celeb == True %}
 <a href="{% url 'product:tempSub' uuid=user.profile.uuid %}">Subscribe to {{user.username}}</a>
 {% else %}
+{% if unauthed %}
+{% else %}
 <a href="{% url 'account:makeAcceptance' name=user.username %}">request to follow</a>
+{% endif %}
 {% endif %}
 
 

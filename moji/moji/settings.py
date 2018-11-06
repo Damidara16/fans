@@ -20,23 +20,23 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'p32o79th6p2=f88w-ev4var@*u__7f!cp$r#7*@1oh=m@8+e02'
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'p32o79th6p2=f88w-ev4var@*u__7f!cp$r#7*@1oh=m@8+e02'
+#SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['fans2000.herokuapp.com']
+ALLOWED_HOSTS = [] #['fans2000.herokuapp.com']
 
 #EMAIL
 #if DEBUG == True:
-#EMAIL_HOST = 'localhost'
-#EMAIL_PORT = 1025
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
 #else:
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'yourgmail@gmail.com'
-EMAIL_HOST_PASSWORD = 'yourpassword'
-EMAIL_PORT = '587'
-EMAIL_USE_TLS = True
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_HOST_USER = 'yourgmail@gmail.com'
+#EMAIL_HOST_PASSWORD = 'yourpassword'
+#EMAIL_PORT = '587'
+#EMAIL_USE_TLS = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -63,7 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'moji.middleware.LoginRequiredMiddleware',
+    'moji.middleware.LoginRequiredMiddleware',
     #'moji.middleware.BlockedMiddleware',
 ]
 
@@ -153,9 +153,21 @@ LOGIN_EXEMPT_URLS = (
     r'^account/reset-password/done/$',
     r'^account/reset-password/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
     r'^account/reset-password/complete/$',
-    r'^banking/step1/$',
-    r'^banking/step2/$',
-    r'^banking/step3/$',
+    r'^home/$',
+    r'^account/profile/(?P<name>\w+)/$',
+    r'^home/search/$',
+    r'^home/bug/$',
+    r'^home/about/$',
+    r'^home/how-we-work/$',
+    r'^home/discover/$',
+    r'^home/discover/(?P<genre>\w+)/$',
+    r'^home/join/$',
+)
+SUB_POPUP_URLS = (
+    r'^content/detail/(?P<uuid>[\w]{8}(-[\w]{4}){3}-[\w]{12})/$',
+    r'^product/sub/(?P<uuid>[\w]{8}(-[\w]{4}){3}-[\w]{12})/$',
+    r'^product/subscription/(?P<uuid>[\w]{8}(-[\w]{4}){3}-[\w]{12})/$',
+    r'^product/tipcreation/(?P<name>\w+)/$',
 )
 
 BLOCKED_URLS = (
@@ -174,12 +186,12 @@ db_from_env = dj_database_url.config()
 DATABASES['default'].update(db_from_env)
 DATABASES['default']['CONN_MAX_AGE'] = 500
 
-CORS_REPLACE_HTTPS_REFERER      = True
-HOST_SCHEME                     = "https://"
-SECURE_PROXY_SSL_HEADER         = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT             = True
-SESSION_COOKIE_SECURE           = True
-CSRF_COOKIE_SECURE              = True
-SECURE_HSTS_INCLUDE_SUBDOMAINS  = True
-SECURE_HSTS_SECONDS             = 1000000
-SECURE_FRAME_DENY               = True
+#CORS_REPLACE_HTTPS_REFERER      = True
+#HOST_SCHEME                     = "https://"
+#SECURE_PROXY_SSL_HEADER         = ('HTTP_X_FORWARDED_PROTO', 'https')
+#SECURE_SSL_REDIRECT             = True
+#SESSION_COOKIE_SECURE           = True
+#CSRF_COOKIE_SECURE              = True
+#SECURE_HSTS_INCLUDE_SUBDOMAINS  = True
+#SECURE_HSTS_SECONDS             = 1000000
+#SECURE_FRAME_DENY               = True
