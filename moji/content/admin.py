@@ -21,7 +21,7 @@ class CommentAdmin(admin.ModelAdmin):
     def contentid(self, obj):
         return obj.ParentContent.uuid
 
-admin.site.register(Content, ContentAdmin)
+#admin.site.register(Content, ContentAdmin)
 
 admin.site.register(Comment, CommentAdmin)
 

@@ -1,4 +1,272 @@
-from django.shortcuts import render, redirect
+from django.views import View
+from django.conf import settings
+from .serializers import *
+from .models import *
+from django.http import JsonResponse
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import authenticate
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from django.contrib.auth.views import  logout
+
+
+#follow users
+#crud following
+
+def view_user(request):
+    pass
+
+@api_view(['POST'])
+def send_lastSeen(request):
+    if request.method =="POST":
+        if not request.user.is_authenticated():
+            return Response({"outcome":'error'})
+        serializer = LastSeenSerializer(data=request.data)
+        if serializer.is_valid():
+            LastSeen.objects.create(ip_of_seen=serializer.validated_data['ip_of_seen'],user=request.user)
+            return Response({'outcome':'success'})
+        else:
+            return Response({'outcome':'retry'})
+
+@api_view(['POST'])
+def authUser(request):
+    #add logout if using sessions with api
+    if request.method == "POST":
+        #print(request.data)
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = authenticate(**serializer.validated_data)
+            if user is not None:
+                token, created = Token.objects.get_or_create(user=user)
+                return Response({'token':token.key, 'outcome':'success'})
+            else:
+                return Response({'outcome':'failure to authorize','error':user})
+        else:
+            return Response({'outcome':'error with data'})
+
+@api_view(['POST'])
+def create_user_and_profile(request):
+    if request.method == "POST":
+        serializer = UserCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'outcome':'success'})
+        else:
+            return Response({'outcome':'error with data'})
+
+
+@api_view(['POST'])
+def block_or_unblock_user(request):
+    if request.method == "POST":
+        serializer = BlockUserSerializer(request.data)
+        if serializer.is_valid():
+            try:
+                user = User.objects.get(uuid=serializer.validated_data['blocked_user'])
+            except User.DoesNotExist:
+                return Response({'outcome':'404 user'})
+            action = serializer.validated_data['action']
+            if user != request.user:
+                if action == "BLOCKED":
+                    request.user.blocked.add(user)
+                    if user in request.user.profile.following:
+                        request.user.followed_by.remove(user)
+                        request.user.profile.blocked.add(user)
+                        return Response({'outcome':'success'})
+                elif action == "UNBLOCKED":
+                    request.user.blocked.remove(user)
+                    return Response({'outcome':'success'})
+                else:
+                    return Response({'outcome':'unknown error'})
+            else:
+                return Response({'outcome':'cannot block yourself'})
+
+
+@api_view(['POST'])
+def delete_user_and_profile(request):
+    if request.method == "POST":
+        serializer = DeleteUserSerializer(data=request.data)
+        if serializer.is_valid():
+            if serializer.validated_data['password1'] != serializer.validated_data['password2']:
+                return Response({'outcome':'passwords do not match'})
+            if not request.user.check_password(serializer.validated_data['password1']):
+                return Response({'outcome':'password is invalid'})
+            request.user.delete()
+            return Response({'outcome':'success'})
+        else:
+            return Response({'outcome':'error with data'})
+
+@api_view(['PUT'])
+def update_user_or_profile(request):
+    if request.method == "PUT":
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'outcome':'success', 'data':request.data, 'sdata':serializer.validated_data})
+        return Response({'outcome':'error with data'})
+
+
+@api_view(['GET'])
+def get_user_and_profile_with_content(request, username):
+    if request.method == "GET":
+        if not request.user.is_authenticated():
+            user = User.objects.get(username=username)
+            serializer = UserProfileContentSerializer(user=user,profile=user.profile,content=user.content.filter(preview=True))
+            return Response({'outcome':serializer})
+        else:
+            if username == request.user.username:#check for lower() if raises issue
+                serializer = UserProfileContentSerializer(user=request.user,profile=request.user.profile,content=request.user.content.all())
+                return Response({'outcome':serializer})
+            else:
+                try:
+                    user = User.objects.get(username=username)
+                except User.DoesNotExist:
+                    return Response({'outcome':'can not find user'})
+                if settings.verify_following(request.user,user):
+                    serializer = UserProfileContentSerializer(user=user,profile=user.profile,content=user.content.all())
+                serializer = UserProfileContentSerializer(user=user,profile=user.profile,content=user.content.filter(preview=True))
+                return Response({'outcome':'success', 'data':serializer})
+
+
+
+@api_view(['POST'])
+def change_user_password(request):
+    if request.method == "POST":
+        serializer = PasswordChangeSerializer(request.data)
+        if serializer.is_valid():
+            #user = request.user
+            if not request.user.check_password(serializer.validated_data['old_password']):
+                return Response({'outcome':'password is invalid'})
+            if serializer.validated_data['new_password1'] != serializer.validated_data['new_password2']:
+                return Response({'outcome':'confirmation password does not match new password '})
+                #should handle on frontend
+            request.user.set_password(serializer.validated_data['new_password1'])
+            request.user.save()
+            return Response({'outcome':'success'})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_following(request):
+    if request.method == "GET":
+        ser = FollowSerializer(request.user.following, many=True)
+        return Response({'outcome':ser.validated_data})
+
+@api_view(['GET'])
+def get_followers(request):
+    if request.method == "GET":
+        serializer = UserNoAccountSerializer(request.user.profile.following,many=True)
+        if serializer.is_valid():
+            return Respone({'outcome':'success','results':serializer.validated_data})
+
+@api_view(['POST'])
+def remove_follower(request):
+    if request.method == "POST":
+        serializer = UUIDSerializer(data=request.data)
+        if serializer.is_valid():
+            i_user = User.objects.get(uuid=serializer.validated_data['uuid'])
+            request.user.following.remove(i_user.profile)
+            return Response({'outcome':'success'})
+        else:
+            return Response({'outcome':'error with data'})
+
+"""
+@api_view(['POST'])
+def send_follow_request(request):
+    if request.method == "POST":
+        serializer = UUIDSerializer(data=request.data)
+        if serializer.is_valid():
+            user = User.objects.get(uuid=serializer.validated_data['uuid'])
+            #passing a user object
+            AccountRequest.objects.create(userTo=)
+            return Response({'outcome':'success'})
+
+@api_view(['GET'])
+def get_all_follow_requests(request):
+    if request.method == "GET":
+        serializer = AllFollowRequestSerializer(request.user.requested.all(),many=True)
+        #if serializer.is_valid():
+        return Response({'outcome':serializer.data})
+
+@api_view(['POST'])
+def manage_follow_request(request):
+    if request.method == "POST":
+        serializer = FollowRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            req = AccountRequest.objects.get(uuid=serializer.validated_data['uuid'])
+            if request.user == req.userTo:
+                if serializer.validated_data['action'] == 'ACCEPT':
+                    req.accept = True
+                    req.save()
+                elif serializer.validated_data['action'] == 'DENIED':
+                    req.delete()
+                return Response({'outcome':'passed'})
+            else:
+                return Response({'outcome':'unauth request'})
+
+@api_view(['POST'])
+def unsend_follow_request(request):
+    if request.method == "POST":
+        serializer = UUIDSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                #handles if request.user is the one who sent the request
+                req =  AccountRequest.objects.filter(userFrom=request.user).get(uuid=serializer.validated_data['uuid'])
+            except AccountRequest.DoesNotExist:
+                return Response({'outcome':'can not find follow request'})
+            req.delete()
+            return Response({'outcome':'success'})
+
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""from django.shortcuts import render, redirect
 from account.models import Profile, AccountRequest
 from content.models import Content
 from django.urls import reverse
@@ -204,3 +472,4 @@ def unfollowUser(request, name):
     except AccountRequest.DoesNotExist:
         raise Http404("Cant find that user")
     return redirect(reverse('home:home'))
+"""

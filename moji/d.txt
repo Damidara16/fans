@@ -1,0 +1,50 @@
+#CONTENT
+def create_comment(request,uuid):
+
+def get_content_comments(request,uuid):
+
+def create_content(request):
+
+def delete_comment(request):
+
+def get_content_detail(request,uuid):
+
+def delete_content(request):
+
+def send_content_share(request):
+
+def manage_content_share(request):
+
+def update_likes(request):
+
+
+#ACCOUNT
+def send_lastSeen(request):
+
+def Login(request):
+
+def create_user_and_profile(request):
+
+def block_or_unblock_user(request):
+
+def delete_user_and_profile(request):
+
+def update_user_or_profile(request):
+
+def get_user_and_profile_with_content(request, username):
+
+def change_user_password(request):
+
+def send_follow_request(request):
+
+def get_all_follow_requests(request):
+
+def manage_follow_request(request):
+
+def unsend_follow_request(request):
+
+def get_following(request):
+
+def get_followers(request):
+
+def remove_follower(request):

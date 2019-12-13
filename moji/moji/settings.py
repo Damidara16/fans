@@ -38,7 +38,7 @@ EMAIL_PORT = 1025
 #EMAIL_PORT = '587'
 #EMAIL_USE_TLS = True
 # Application definition
-
+AUTH_USER_MODEL = "account.User"
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,14 +46,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'content',
     'account',
-    'home',
-    'banking',
-    'product',
-    'pages',
-    'notif'
+    #'pages',
+    'content',
+    'rest_framework',
+    'rest_framework.authtoken'
 ]
+
+    #'home',
+    #'banking',
+    #'product',
+    #'notif'
+def verify_following(f_user_following,c_user):
+    return f_user.profile.following.filter(user=c_user).exists()
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -138,9 +143,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media_cdn')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
+AUTHENTICATION_BACKENDS = ['moji.auth.Backend','django.contrib.auth.backends.ModelBackend']
 LOGIN_REDIRECT_URL = '/home'
 
 LOGIN_URL = '/accounts/login/'
@@ -181,11 +186,18 @@ BLOCKED_URLS = (
 
 STRIPE_KEY = "sk_test_jTTjKLvfrEeL6cXjKqoF1KdB"
 
-import dj_database_url
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
+"""import dj_database_url
 db_from_env = dj_database_url.config()
 DATABASES['default'].update(db_from_env)
 DATABASES['default']['CONN_MAX_AGE'] = 500
-
+"""
 #CORS_REPLACE_HTTPS_REFERER      = True
 #HOST_SCHEME                     = "https://"
 #SECURE_PROXY_SSL_HEADER         = ('HTTP_X_FORWARDED_PROTO', 'https')

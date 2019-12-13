@@ -1,0 +1,29 @@
+#how to handle files in python could be useful for s3 system design implementation
+views.py
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from .forms import UploadFileForm
+
+# Imaginary function to handle an uploaded file.
+from somewhere import handle_uploaded_file
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            return HttpResponseRedirect('/success/url/')
+    else:
+        form = UploadFileForm()
+    return render(request, 'upload.html', {'form': form})
+Notice that we have to pass request.FILES into the form’s constructor; this is how file data gets bound into a form.
+
+Here’s a common way you might handle an uploaded file:
+
+def handle_uploaded_file(f):
+    with open('some/file/name.txt', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+Looping over UploadedFile.chunks() instead of using read() ensures that large files don’t overwhelm your system’s memory.
+
+There are a few other methods and attributes available on UploadedFile objects; see UploadedFile for a complete reference.

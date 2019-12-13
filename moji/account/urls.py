@@ -1,10 +1,27 @@
 from django.conf.urls import url
-from django.contrib.auth.views import login, logout, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView 
+#from django.contrib.auth.views import login, logout, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from . import views
 from django.contrib.auth import views as auth_views
 
 app_name = 'account'
-
+urlpatterns = [
+    url(r'^auth/$',views.authUser),
+    url(r'^lastseen/$',views.send_lastSeen),
+    url(r'^update/profile/$',views.update_user_or_profile),
+    url(r'^create/user/$',views.create_user_and_profile),
+    url(r'^post/block_unblock/$',views.block_or_unblock_user),
+    url(r'^delete/user/$', views.delete_user_and_profile),
+    url(r'^get/user_profile/$',views.get_user_and_profile_with_content),
+    url(r'^update/authed_password/$',views.change_user_password),
+    #url(r'^get/follow_request/$', views.get_all_follow_requests),
+    #url(r'^post/follow_request/$',views.send_follow_request),
+    #url(r'^get/requests/$', views.manage_follow_request),
+    #url(r'^delete/follow_request/$',views.unsend_follow_request),
+    url(r'^get/following/$',views.get_following),
+    url(r'^get/followers/$',views.get_followers),
+    url(r'^post/remove_follower/$', views.remove_follower)
+]
+"""
 urlpatterns = [
     url(r'^profile/(?P<name>\w+)/$', views.ViewProfile, name='ProfileView'),
     url(r'^login/$', login, {'template_name': 'pages/2/login.html'}, name='login'),
@@ -31,3 +48,4 @@ urlpatterns = [
 
 #password reset  {'post_reset_redirect': 'account:password_reset_complete'}  {'post_reset_redirect': 'account:password_reset_done'},
 ]
+"""

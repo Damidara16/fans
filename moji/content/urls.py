@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.contrib.auth.views import login, logout
 from . import views
-
+"""
 app_name = 'content'
 
 urlpatterns = [
@@ -42,3 +42,4 @@ urlpatterns = [
     url(r'^creating_playlist/$', views.createPlaylist, name='createPlaylist'),
 
 ]
+"""

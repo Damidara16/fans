@@ -1,4 +1,4 @@
-"""moji URL Configuration
+"""moji URL Configuration!
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
@@ -17,15 +17,16 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.auth.views import login, logout
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^account/', include('account.urls')),
-    url(r'^content/', include('content.urls')),
-    url(r'^home/', include('home.urls')),
-    url(r'^product/', include('product.urls')),
-    url(r'^banking/', include('banking.urls')),
-    url(r'^notification/', include('notif.urls')),
+    #url(r'^content/', include('content.urls')),
+    #url(r'^home/', include('home.urls')),
+    #url(r'^product/', include('product.urls')),
+    #url(r'^banking/', include('banking.urls')),
+    #url(r'^notification/', include('notif.urls')),
     url(r'', include('django.contrib.auth.urls'))
 ]
 

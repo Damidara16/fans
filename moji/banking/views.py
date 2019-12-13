@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+"""from django.shortcuts import render, redirect
 from django.urls import reverse
 import requests
 import json
@@ -68,3 +68,4 @@ def modifyCard(request):
         )
         StripeCustomer.objects.create(user=request.user, stripe_id=customer.id)
         return redirect(reverse('home:home'))
+"""

@@ -1,8 +1,6 @@
 <h1>FANMOJI</h1>
-<a href="{% url 'home:home' %}">Home</a>
 <form></form>
 <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="login" />
 </form>
-<a href="{% url 'account:password_reset' %}">forgot password?</a>
