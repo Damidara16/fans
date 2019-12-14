@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.contrib.auth.views import  logout
-
+from moji.project_funcs import *
 
 #follow users
 #crud following
@@ -113,21 +113,22 @@ def get_user_and_profile_with_content(request, username):
     if request.method == "GET":
         if not request.user.is_authenticated():
             user = User.objects.get(username=username)
-            serializer = UserProfileContentSerializer(user=user,profile=user.profile,content=user.content.filter(preview=True))
-            return Response({'outcome':serializer})
+            serializer = UserProfileContentSerializer({'user':user,'profile':user.profile,'content':user.content_set.all()})
+            return Response({'outcome':'success','data':serializer.data})
         else:
             if username == request.user.username:#check for lower() if raises issue
-                serializer = UserProfileContentSerializer(user=request.user,profile=request.user.profile,content=request.user.content.all())
-                return Response({'outcome':serializer})
+                serializer = UserProfileContentSerializer({'user':request.user,'profile':request.user.profile,'content':request.user.content_set.all()})
+                return Response({'outcome':'success','data':serializer.data})
             else:
                 try:
                     user = User.objects.get(username=username)
                 except User.DoesNotExist:
-                    return Response({'outcome':'can not find user'})
-                if settings.verify_following(request.user,user):
-                    serializer = UserProfileContentSerializer(user=user,profile=user.profile,content=user.content.all())
-                serializer = UserProfileContentSerializer(user=user,profile=user.profile,content=user.content.filter(preview=True))
-                return Response({'outcome':'success', 'data':serializer})
+                    return Response({'outcome':'404 user'})
+                if verify_following(request.user,user.uuid):
+                    serializer = UserProfileContentSerializer({'user':user,'profile':user.profile,'content':user.content_set.all()})
+                else:
+                    serializer = UserProfileContentSerializer({'user':user,'profile':user.profile,'content':user.content_set.filter(preview=True)})
+                return Response({'outcome':'success', 'data':serializer.data})
 
 
 
@@ -140,7 +141,7 @@ def change_user_password(request):
             if not request.user.check_password(serializer.validated_data['old_password']):
                 return Response({'outcome':'password is invalid'})
             if serializer.validated_data['new_password1'] != serializer.validated_data['new_password2']:
-                return Response({'outcome':'confirmation password does not match new password '})
+                return Response({'outcome':'confirmation password does not match new password'})
                 #should handle on frontend
             request.user.set_password(serializer.validated_data['new_password1'])
             request.user.save()

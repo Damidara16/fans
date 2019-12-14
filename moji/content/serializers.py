@@ -24,7 +24,7 @@ class ContentShareRequestSerializer(serializers.ModelSerializer):
         fields = ("userTo","userFrom","content")
 
 
-class ContentShareManageSerializer(serializers.Serializer):
+"""class ContentShareManageSerializer(serializers.Serializer):
     #EXPECTED ACTIONS 'ACCEPT' OR 'DENIED'
     action = serializers.CharField(max_length=6)
-    uuid = UUIDSerializer()
+    uuid = UUIDSerializer()"""

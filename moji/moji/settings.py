@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     #'notif'
 def verify_following(f_user_following,c_user):
     return f_user.profile.following.filter(user=c_user).exists()
-
+verified = verify_following
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -145,7 +145,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-AUTHENTICATION_BACKENDS = ['moji.auth.Backend','django.contrib.auth.backends.ModelBackend']
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 LOGIN_REDIRECT_URL = '/home'
 
 LOGIN_URL = '/accounts/login/'

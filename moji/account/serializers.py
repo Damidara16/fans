@@ -1,9 +1,8 @@
 from rest_framework import serializers
-#from django.contrib.auth.models import User
 from django.conf import settings
 from .models import *
-#from content.serializer import UserContentSerializer
-#there may be a problem with UserSerialzer with password field and get non owner accouts
+from content.serializers import UserContentSerializer
+#there may be a problem with UserSerialzer with password field and get non owner accounts
 
 
 #needed for account updates,creations, and return account info
@@ -53,10 +52,9 @@ class UserBannerSerializer(serializers.ModelSerializer):
         #hidden_fields = ('uuid',)
 
 class UserProfileContentSerializer(serializers.Serializer):
-    profile = AccountSerializer()
     user = UserNoAccountSerializer()
-    requests = AllFollowRequestSerializer(many=True)
-    #content = UserContentSerializer(many=True)
+    profile = AccountSerializer()
+    content = UserContentSerializer(many=True)
 
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()

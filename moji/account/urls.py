@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^create/user/$',views.create_user_and_profile),
     url(r'^post/block_unblock/$',views.block_or_unblock_user),
     url(r'^delete/user/$', views.delete_user_and_profile),
-    url(r'^get/user_profile/$',views.get_user_and_profile_with_content),
+    url(r'^get/user/(?P<username>\w+)/$',views.get_user_and_profile_with_content),
     url(r'^update/authed_password/$',views.change_user_password),
     #url(r'^get/follow_request/$', views.get_all_follow_requests),
     #url(r'^post/follow_request/$',views.send_follow_request),
