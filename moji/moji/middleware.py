@@ -1,19 +1,20 @@
 import re
-
+from rest_framework.response import Response
 from django.conf import settings
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib.auth import logout
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
-EXEMPT_URLS = [re.compile(settings.LOGIN_URL.lstrip('/'))]
-if hasattr(settings, 'LOGIN_EXEMPT_URLS'):
-    EXEMPT_URLS += [re.compile(url) for url in settings.LOGIN_EXEMPT_URLS]
+AUTH_URLS = [re.compile(settings.AUTH_URL.lstrip('/'))]
+if hasattr(settings, 'AUTH_REQUIRED_URLS'):
+    AUTH_URLS += [re.compile(url) for url in settings.AUTH_REQUIRED_URLS]
 
 POPUP_URLS = []#[re.compile(settings.LOGIN_URL.lstrip('/'))]
 if hasattr(settings, 'SUB_POPUP_URLS'):
     POPUP_URLS += [re.compile(url) for url in settings.SUB_POPUP_URLS]
 
-class LoginRequiredMiddleware:
+class AuthRequiredMiddleware:
 
     def __init__(self, get_response):
         self.get_response = get_response
@@ -25,18 +26,18 @@ class LoginRequiredMiddleware:
     def process_view(self, request, view_func, view_args, view_kwargs):
         assert hasattr(request, 'user')
         path = request.path_info.lstrip('/')
-        url_is_exempt = any(url.match(path) for url in EXEMPT_URLS)
-        url_is_popup = any(url.match(path) for url in POPUP_URLS)
-
-        if path == reverse('account:logout').lstrip('/'):
-            logout(request)
-
-        if not request.user.is_authenticated() and url_is_popup:
-            return redirect('home:join')
-        elif request.user.is_authenticated() or url_is_exempt:
+        auth_needed_urls = any(url.match(path) for url in AUTH_URLS)
+        #url_is_popup = any(url.match(path) for url in POPUP_URLS)
+        #if path == reverse('account:logout').lstrip('/'):
+        #    logout(request)
+        if not request.user.is_authenticated() and auth_needed_urls:
+            return redirect('account:unauthed')
+        else:
+            return None
+"""        elif request.user.is_authenticated() or url_is_exempt:
             return None #redirect('home:home')
         else:
-            return redirect('account:login')
+            return redirect('account:login')"""
 
 class BlockedMiddleware:
 
@@ -86,3 +87,9 @@ class PageNotFoundMiddleware:
             content = Content.objects.get(id=name)
         else:
             user = User.objects.get(username=name)
+
+
+
+
+class AuthenticationRequired:
+    pass

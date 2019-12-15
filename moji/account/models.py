@@ -25,6 +25,10 @@ import uuid
 
         return username.lower()
 """
+
+
+class FilePart(models.Model):
+    file = models.FileField()
 class BannerManager(models.Manager):
     def get_queryset(self):
         return super(BannerManager, self).get_queryset().select_related('profile').values('username', 'uuid', bio=Lower('profile__bio'))

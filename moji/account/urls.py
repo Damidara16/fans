@@ -5,11 +5,13 @@ from django.contrib.auth import views as auth_views
 
 app_name = 'account'
 urlpatterns = [
+    url(r'^post/file/$',views.postFile,name='filepost'),
+    url(r'^unauth/$',views.unauthed,name='unauthed'),
     url(r'^auth/$',views.authUser),
     url(r'^lastseen/$',views.send_lastSeen),
     url(r'^update/profile/$',views.update_user_or_profile),
     url(r'^create/user/$',views.create_user_and_profile),
-    url(r'^post/block_unblock/$',views.block_or_unblock_user),
+    url(r'^manage/block_unblock/$',views.block_or_unblock_user),
     url(r'^delete/user/$', views.delete_user_and_profile),
     url(r'^get/user/(?P<username>\w+)/$',views.get_user_and_profile_with_content),
     url(r'^update/authed_password/$',views.change_user_password),

@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     #'notif'
 def verify_following(f_user_following,c_user):
     return f_user.profile.following.filter(user=c_user).exists()
-verified = verify_following
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -68,7 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'moji.middleware.LoginRequiredMiddleware',
+    #'moji.middleware.AuthRequiredMiddleware',
     #'moji.middleware.BlockedMiddleware',
 ]
 
@@ -142,31 +142,23 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_URL = '/media/'
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 LOGIN_REDIRECT_URL = '/home'
 
-LOGIN_URL = '/accounts/login/'
+AUTH_URL = '/accounts/login/'
 
-LOGIN_EXEMPT_URLS = (
-    r'^account/login/$',
-    r'^account/logout/$',
-    r'^account/register/$',
-    r'^account/reset-password/$',
-    r'^account/reset-password/done/$',
-    r'^account/reset-password/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
-    r'^account/reset-password/complete/$',
-    r'^home/$',
-    r'^account/profile/(?P<name>\w+)/$',
-    r'^home/search/$',
-    r'^home/bug/$',
-    r'^home/about/$',
-    r'^home/how-we-work/$',
-    r'^home/discover/$',
-    r'^home/discover/(?P<genre>\w+)/$',
-    r'^home/join/$',
+AUTH_REQUIRED_URLS = (
+    r'^account/update/profile/$'
+    r'^account/create/user/$'
+    r'^account/manage/block_unblock/$'
+    r'^account/delete/user/$'
+    r'^account/update/authed_password/$'
+    r'^account/get/following/$'
+    r'^account/get/followers/$'
+    r'^account/post/remove_follower/$'
 )
 SUB_POPUP_URLS = (
     r'^content/detail/(?P<uuid>[\w]{8}(-[\w]{4}){3}-[\w]{12})/$',
@@ -190,6 +182,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+    ],
+     'DEFAULT_PERMISSION_CLASSES':[
+        'rest_framework.permissions.IsAuthenticated',
     ]
 }
 

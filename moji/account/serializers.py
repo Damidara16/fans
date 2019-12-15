@@ -4,7 +4,10 @@ from .models import *
 from content.serializers import UserContentSerializer
 #there may be a problem with UserSerialzer with password field and get non owner accounts
 
-
+class FileSer(serializers.ModelSerializer):
+    class Meta:
+        model = FilePart
+        fields = ("__all__")
 #needed for account updates,creations, and return account info
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:

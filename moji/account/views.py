@@ -9,15 +9,28 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes, parser_classes
+from rest_framework.parsers import JSONParser, MultiPartParser
 from django.contrib.auth.views import  logout
 from moji.project_funcs import *
 
 #follow users
 #crud following
 
-def view_user(request):
-    pass
+@api_view(['GET'])
+def unauthed(request):
+    return Response({'outcome':'unauthed request'})
+
+@api_view(['POST','PUT'])
+@permission_classes([])
+@parser_classes([JSONParser, MultiPartParser])
+def postFile(request):
+    if request.method in ['POST','PUT']:
+        ser = FileSer(data=request.data)
+        if ser.is_valid():
+            upload_handler_chunk(ser.validated_data['file'])
+            return Response({'outcome':'success', 'data':ser.validated_data['file'].name})
+        return Response({'outcome':ser.errors})
 
 @api_view(['POST'])
 def send_lastSeen(request):
@@ -149,10 +162,9 @@ def change_user_password(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_following(request):
     if request.method == "GET":
-        ser = FollowSerializer(request.user.following, many=True)
+        ser = UserNoAccountSerializer(request.user.profile.following, many=True)
         return Response({'outcome':ser.validated_data})
 
 @api_view(['GET'])
