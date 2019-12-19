@@ -23,7 +23,7 @@ def unauthed(request):
 
 @api_view(['POST','PUT'])
 @permission_classes([])
-@parser_classes([JSONParser, MultiPartParser])
+#@parser_classes([JSONParser, MultiPartParser])
 def postFile(request):
     if request.method in ['POST','PUT']:
         ser = FileSer(data=request.data)

@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     #'notif'
 def verify_following(f_user_following,c_user):
     return f_user.profile.following.filter(user=c_user).exists()
-
+#FILE_UPLOAD_HANDLERS = []
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
